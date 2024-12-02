@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Acres Farm</title>
+    <style>
+        :root {
+            --primary-color: #34c759;
+            --secondary-color: #ffffff;
+            --dark-color: #333333;
+            --text-color: #000000;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px; /* Adjusted header height */
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-thumbnail {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .header-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-text h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .header-text p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .hamburger-menu {
+            background-color: transparent;
+            border: none;
+			margin-right: 35px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sliding Menu Styles */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: var(--secondary-color);
+            box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 15;
+            padding: 20px;
+        }
+
+        .menu-overlay.active {
+            transform: translateX(0);
+        }
+
+        .menu-overlay .close-menu {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .menu-options {
+            margin-top: 20px;
+        }
+
+        .menu-options button {
+            display: block;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            padding: 10px 15px;
+            margin: 10px 0;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .menu-options button:hover {
+            background-color: #2da74f;
+        }
+
+        .menu-options .divider {
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
+        }
+
+        /* Add spacing to prevent header overlap */
+        .content-wrapper {
+            margin-top: 80px; /* Prevent content from being hidden under header */
+            padding: 10px 20px;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        section {
+            margin: 20px 0;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-thumbnail {
+            width: 50px;
+            height: 50px;
+            background: #eee;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .product-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .product-price {
+            text-align: right;
+        }
+
+        .product-price .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .ad-banner {
+            top: 20px;
+            padding: 10px;
+            text-align: center;
+            background-color: #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-thumbnail">
+            <img src="https://via.placeholder.com/50" alt="Farm Logo">
+        </div>
+        <div class="header-text">
+            <h1>Green Acres Farm</h1>
+            <p>Provide healthy, locally-grown food to the Palo Alto community</p>
+        </div>
+        <button class="hamburger-menu" id="hamburgerMenu">☰</button>
+    </header>
+
+    <!-- Sliding Menu -->
+    <div class="menu-overlay" id="menuOverlay">
+        <button class="close-menu" id="closeMenu">Close</button>
+        <div class="menu-options">
+            <button>Return to Main</button>
+            <div class="divider"></div>
+            <button>Send Message</button>
+            <button>Get Updates</button>
+            <button>About Us</button>
+        </div>
+    </div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="products-header">
+            <h2>Available Products:</h2>
+            <button>Filter</button>
+        </div>
+
+        <section class="products-section">
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Apples</h2>
+                    <p>A basket of fresh red apples</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$4</p>
+                    <p class="unit">/ dozen</p>
+					<p class="product-quantity">15 lbs available</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+            <div class="product-item">
+                <div class="product-thumbnail">Image</div>
+                <div class="product-details">
+                    <h2>Fresh Oranges</h2>
+                    <p>A bag of sweet, juicy oranges</p>
+                </div>
+                <div class="product-price">
+                    <p class="price">$2</p>
+                    <p class="unit">/ lb</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-banner">
+            Sponsored Ad: Your ad could be here!
+        </div>
+    </div>
+
+    <script>
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenu = document.getElementById('closeMenu');
+
+        hamburgerMenu.addEventListener('click', () => {
+            menuOverlay.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            menuOverlay.classList.remove('active');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!menuOverlay.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                menuOverlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

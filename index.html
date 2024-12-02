@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Farm Produce Listings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Content -->
+    <main>
+        <section class="hero">
+            <h1>Find Fresh Produce Near You</h1>
+            <p>Search for fresh produce from local farms, and find what you're craving!</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Enter produce (e.g. Apples, Lettuce)" id="produceSearch">
+                <input type="text" placeholder="Enter Zip Code" id="zipCodeInput">
+                <input type="number" placeholder="Radius (in miles)" id="radiusInput">
+                <button id="searchButton">Search</button> <!-- Updated button ID -->
+            </div>
+        </section>
+
+        <section class="listings">
+            <h2>Search Results</h2>
+            <div id="farmListings" class="listing-list">
+                <!-- Farm listings will be dynamically inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Farm Produce Listings</p>
+            <nav>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="customize.html">Customize</a></li> <!-- New Customize Link -->
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Function to apply the custom colors from localStorage
+        function applyCustomColors() {
+            const headerColor = localStorage.getItem("headerColor");
+            const buttonColor = localStorage.getItem("buttonColor");
+            const bgColor = localStorage.getItem("bgColor");
+
+            if (headerColor) {
+                document.querySelector(".header").style.backgroundColor = headerColor;
+            }
+
+            if (buttonColor) {
+                const buttons = document.querySelectorAll("button");
+                buttons.forEach(button => {
+                    button.style.backgroundColor = buttonColor;
+                    button.style.borderRadius = "30px";  // Ensure rounded corners
+                });
+            }
+
+            if (bgColor) {
+                document.body.style.backgroundColor = bgColor;
+            }
+        }
+
+        // Apply custom colors when the page loads
+        applyCustomColors();
+
+        // Sample farms data for demo
+        const farms = [
+            { name: "Green Acres Farm", produce: "Apples, Carrots, Lettuce", location: "Palo Alto, CA", zip: "94301" },
+            { name: "Sunny Valley Farm", produce: "Tomatoes, Peppers, Kale", location: "Menlo Park, CA", zip: "94025" },
+            { name: "Riverbend Farm", produce: "Strawberries, Cucumbers", location: "Mountain View, CA", zip: "94040" }
+        ];
+
+        // Filter and display farms
+        document.getElementById("searchButton").addEventListener("click", function() {  // Updated to match ID
+            const produceSearch = document.getElementById("produceSearch").value.toLowerCase();
+            const zipCode = document.getElementById("zipCodeInput").value;  // Corrected ID for zip code input
+            const radius = document.getElementById("radiusInput").value;  // Corrected ID for radius input
+
+            const filteredFarms = farms.filter(farm => {
+                const isProduceMatch = farm.produce.toLowerCase().includes(produceSearch);
+                const isWithinRadius = calculateDistance(zipCode, farm.zip) <= radius;
+                return isProduceMatch && isWithinRadius;
+            });
+
+            const farmListingsContainer = document.getElementById("farmListings");
+            farmListingsContainer.innerHTML = ''; // Clear previous results
+
+            if (filteredFarms.length === 0) {
+                farmListingsContainer.innerHTML = "<p>No farms found in your area matching your search.</p>";
+            } else {
+                filteredFarms.forEach(farm => {
+                    const farmItem = document.createElement("div");
+                    farmItem.classList.add("listing-item");
+                    farmItem.innerHTML = `
+                        <h3>${farm.name}</h3>
+                        <p>Produce: ${farm.produce}</p>
+                        <p class="location">Location: ${farm.location}</p>
+                    `;
+                    farmListingsContainer.appendChild(farmItem);
+                });
+            }
+        });
+
+        // Dummy distance calculation (you should replace this with an actual algorithm or API)
+        function calculateDistance(zipCode1, zipCode2) {
+            return Math.random() * 100; // Random distance for demo purposes
+        }
+    </script>
+</body>
+</html>
